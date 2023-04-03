@@ -188,12 +188,11 @@ If Dest != (address of Step) then increment Step</string>
       <elementAttributes>
         <entry>
           <string>Description</string>
-          <string>Addresses:
-
-0x0-0x3fff - ROM
-0x4000-0x7fff - RAM
-
-0xffffffff - Step</string>
+          <string>0x0000-0x3FFF : ROM
+0x4000-0x7FFF : RAM
+0xF000-0xF001 : ALU operands
+0xF002-0xF00A : ALU SUM, AND, OR, XOR, NOT, GT, GTE, LT, LTE
+0xFFFF : Step</string>
         </entry>
       </elementAttributes>
       <pos x="1020" y="900"/>
@@ -593,6 +592,11 @@ If Dest != (address of Step) then increment Step</string>
       <elementName>Probe</elementName>
       <elementAttributes/>
       <pos x="180" y="600"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Probe</elementName>
+      <elementAttributes/>
+      <pos x="800" y="680"/>
     </visualElement>
   </visualElements>
   <wires>
@@ -1055,6 +1059,10 @@ If Dest != (address of Step) then increment Step</string>
     <wire>
       <p1 x="1500" y="440"/>
       <p2 x="1500" y="540"/>
+    </wire>
+    <wire>
+      <p1 x="800" y="680"/>
+      <p2 x="800" y="720"/>
     </wire>
     <wire>
       <p1 x="800" y="720"/>
