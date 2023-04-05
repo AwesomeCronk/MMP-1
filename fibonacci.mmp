@@ -13,7 +13,8 @@ $ Intermediate 0x4000   ; Put it in RAM
     
     
 @ Loop
-    ; At this point in the loop, ALU.SUM has the next number in the sequence. Would copy to output but it's not built yet.
+    ; At this point in the loop, ALU.SUM has the next number
+    ; Would copy to output but it's not built yet
     ALU.SUM         Intermediate
     ALU.B           ALU.A
     Intermediate    ALU.B
