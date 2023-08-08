@@ -70,20 +70,22 @@ deviceLayouts = {
         'programOffset': 0x0000,
         'maxProgramSize': 0x4000,
         'tags': {
-            'ROM':      0x0000,
-            'RAM':      0x4000,
-            'ALU.A':    0xF000,
-            'ALU.B':    0xF001,
-            'ALU.SUM':  0xF002,
-            'ALU.AND':  0xF003,
-            'ALU.OR':   0xF004,
-            'ALU.XOR':  0xF005,
-            'ALU.NOT':  0xF006,
-            'ALU.GT':   0xF007,
-            'ALU.GTE':  0xF008,
-            'ALU.LT':   0xF009,
-            'ALU.LTE':  0xF00A,
-            'Step':     0xFFFF
+            'ROM':          0x0000,
+            'RAM':          0x4000,
+            'ALU.A':        0xF000,
+            'ALU.B':        0xF001,
+            'ALU.SUM':      0xF002,
+            'ALU.AND':      0xF003,
+            'ALU.OR':       0xF004,
+            'ALU.XOR':      0xF005,
+            'ALU.NOT':      0xF006,
+            'ALU.GT':       0xF007,
+            'ALU.GTE':      0xF008,
+            'ALU.LT':       0xF009,
+            'ALU.LTE':      0xF00A,
+            'Disp.XIndex':  0xF100,
+            'Disp.CValues': 0xF101,
+            'Step':         0xFFFF
         }
     }
 }
