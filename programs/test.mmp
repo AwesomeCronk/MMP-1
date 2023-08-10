@@ -2,7 +2,7 @@
 
 ; If this instruction is commented out, DispA should
 ; show 2, then 3. Otherwise, DispA should just show 3.
-Display3 Step
+&Display3 Step
 
 @ Display2
 Const_2 DispA

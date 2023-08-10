@@ -42,14 +42,27 @@ def isValidTagName(name):
     return True
 
 
-def resolveAddr(addr):
-    if addr in tags:
-        addr = tags[addr]
+def resolveAddr(ident: str):
+    # addr is a tag name
+    if ident in tags:
+        addr = tags[ident]
+
+    # addr is a pointer
+    elif ident[0] == '&':
+        if ident[1:] in tags:
+            pointerAddr = resolveAddr(ident[1:])
+            if pointerAddr is None:
+                return None
+            else:
+                pointers.append(pointerAddr)
+                addr = len(program) + len(pointers) - 1  # pointers will be embedded directly after the program
+
+    # addr is a literal address
     else:
         try:
-            if addr[0:2] == '0x': addr = int(addr, base=16)
-            elif addr[0:2] == '0b': addr = int(addr, base=2)
-            else: addr = int(addr)
+            if ident[0:2] == '0x': addr = int(ident, base=16)
+            elif ident[0:2] == '0b': addr = int(ident, base=2)
+            else: addr = int(ident)
         except ValueError:
             return None
         
@@ -97,6 +110,7 @@ if __name__ == '__main__':
     args = getArgs()
     try: tags = deviceLayouts[args.device]['tags']
     except IndexError: print('Device {} not recognized'); sys.exit(1)
+    pointers = []
     binary = b''
     program = {}
 
@@ -175,6 +189,9 @@ if __name__ == '__main__':
         elif isinstance(instr, int):
             binary = binary + int.to_bytes(instr, 4, 'big')
 
+    for pointer in pointers:
+        binary = binary + int.to_bytes(pointer, 4, 'big')
+
 
     # Write binary
     with open(args.outfile, 'wb') as outfile:
@@ -224,3 +241,10 @@ if __name__ == '__main__':
             else: addr = '0x{:04X} :'.format(addr)
 
             print('{} {} | {} : {}'.format(addr, compiled, str(l + 1).rjust(max(lineNumSize, 4)), line))
+
+        for p, pointer in enumerate(pointers):
+            addr = '0x{:04X} :'.format(len(program) + p)
+            compiled = '& 0x{:08X}'.format(pointer).ljust(compiledWidth)
+
+            print('{} {} |'.format(addr, compiled))
+
