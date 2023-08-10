@@ -1,0 +1,45 @@
+; Test jump
+
+; If this instruction is commented out, DispA should
+; show 2, then 3. Otherwise, DispA should just show 3.
+Display3 Step
+
+@ Display2
+Const_2 DispA
+
+@ Display3
+Const_3 DispA
+
+@ Const_2 = 2
+@ Const_3 = 3
+
+; TestDisplay Step
+; @ RetTestDisplay
+; 
+; TestALU Step
+; @ RetTestALU
+; 
+; 0 ClockMode
+; 
+; 
+; ; Test display
+; 
+; @ Const_As = 0xAAAAAAAA
+; @ Const_Bs = 0xBBBBBBBB
+; 
+; @ TestDisplay
+;     Const_As DispA
+;     Const_Bs DispB
+; 
+;     RetTestDisplay Step
+; 
+; 
+; ; Test ALU
+; 
+; @ Const_2 = 2
+; @ Const_3 = 3
+; 
+; @ TestALU
+;     Const_2 ALU.A
+;     Const_3 ALU.B
+;     ALU.SUM DispA

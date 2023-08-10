@@ -1,9 +1,0 @@
-; Quick test of the ALU
-
-Const_2 ALU.A
-Const_3 ALU.B
-ALU.SUM Result
-
-@ Const_2 = 2
-@ Const_3 = 3
-$ Result 0x4000
