@@ -1,45 +1,38 @@
-; Test jump
+; test.mmp - Basic functionality test for the MMP-1
 
-; If this instruction is commented out, DispA should
-; show 2, then 3. Otherwise, DispA should just show 3.
-&Display3 Step
+&TestDisplays Step
+@ RetTestDisplays
 
-@ Display2
-Const_2 DispA
+&TestALU Step
+@ RetTestALU
 
-@ Display3
-Const_3 DispA
+; 0 ClockMode
+
+&TestDisplays DispA
+
+
+
+; Test 7 seg displays
+
+@ Const_As = 0xAAAAAAAA
+@ Const_Bs = 0xBBBBBBBB
+
+@ TestDisplays
+    Const_As DispA
+    Const_Bs DispB
+
+&RetTestDisplays Step
+
+
+
+; Test ALU
 
 @ Const_2 = 2
 @ Const_3 = 3
 
-; TestDisplay Step
-; @ RetTestDisplay
-; 
-; TestALU Step
-; @ RetTestALU
-; 
-; 0 ClockMode
-; 
-; 
-; ; Test display
-; 
-; @ Const_As = 0xAAAAAAAA
-; @ Const_Bs = 0xBBBBBBBB
-; 
-; @ TestDisplay
-;     Const_As DispA
-;     Const_Bs DispB
-; 
-;     RetTestDisplay Step
-; 
-; 
-; ; Test ALU
-; 
-; @ Const_2 = 2
-; @ Const_3 = 3
-; 
-; @ TestALU
-;     Const_2 ALU.A
-;     Const_3 ALU.B
-;     ALU.SUM DispA
+@ TestALU
+    Const_2 ALU.A
+    Const_3 ALU.B
+    ALU.SUM DispA
+
+&RetTestALU Step

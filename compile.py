@@ -43,21 +43,26 @@ def isValidTagName(name):
 
 
 def resolveAddr(ident: str):
-    # addr is a tag name
+    # ident is a tag name
     if ident in tags:
-        addr = tags[ident]
+        return tags[ident]
 
-    # addr is a pointer
+    # ident is a pointer
     elif ident[0] == '&':
         if ident[1:] in tags:
-            pointerAddr = resolveAddr(ident[1:])
-            if pointerAddr is None:
+            pointerTarget = resolveAddr(ident[1:])
+            if pointerTarget is None:
                 return None
+            
+            elif pointerTarget in pointers.keys():
+                return pointers[pointerTarget]
+            
             else:
-                pointers.append(pointerAddr)
-                addr = len(program) + len(pointers) - 1  # pointers will be embedded directly after the program
+                pointerAddr = len(program) + len(pointers)  # pointers will be embedded directly after the program
+                pointers[pointerTarget] = pointerAddr
+                return pointerAddr
 
-    # addr is a literal address
+    # ident is a literal address
     else:
         try:
             if ident[0:2] == '0x': addr = int(ident, base=16)
@@ -66,7 +71,7 @@ def resolveAddr(ident: str):
         except ValueError:
             return None
         
-    return addr
+        return addr
 
 def resolveValue(value):
     try:
@@ -110,7 +115,7 @@ if __name__ == '__main__':
     args = getArgs()
     try: tags = deviceLayouts[args.device]['tags']
     except IndexError: print('Device {} not recognized'); sys.exit(1)
-    pointers = []
+    pointers = {}
     binary = b''
     program = {}
 
@@ -189,8 +194,8 @@ if __name__ == '__main__':
         elif isinstance(instr, int):
             binary = binary + int.to_bytes(instr, 4, 'big')
 
-    for pointer in pointers:
-        binary = binary + int.to_bytes(pointer, 4, 'big')
+    for pointerTarget in pointers.keys():
+        binary = binary + int.to_bytes(pointerTarget, 4, 'big')
 
 
     # Write binary
@@ -212,6 +217,7 @@ if __name__ == '__main__':
     if args.list:
         terminalWidth = os.get_terminal_size()[0]
         compiledWidth = 16
+        pointerWidth = 11
         lineNumSize = len(str(len(code)))   # Max number of digits in line numbers
         print(' Addr  : {} | Line : Source'.format('Compiled'.center(compiledWidth)))
         print('====== : {} | ==== : {}'.format('=' * compiledWidth, '=' * (terminalWidth - compiledWidth - 19)))
@@ -242,9 +248,18 @@ if __name__ == '__main__':
 
             print('{} {} | {} : {}'.format(addr, compiled, str(l + 1).rjust(max(lineNumSize, 4)), line))
 
-        for p, pointer in enumerate(pointers):
-            addr = '0x{:04X} :'.format(len(program) + p)
-            compiled = '& 0x{:08X}'.format(pointer).ljust(compiledWidth)
+        print(' Addr  : {}'.format('Pointer'.center(pointerWidth)))
 
-            print('{} {} |'.format(addr, compiled))
+        
+        reversePointers = {}
+        pointerTargets = tuple(pointers.keys())
+
+        for p, pointerAddress in enumerate(pointers.values()):
+            reversePointers[pointerAddress] = pointerTargets[p]
+
+        for pointerAddress in reversePointers.keys():
+            addr = '0x{:04X} :'.format(pointerAddress)
+            compiled = '&0x{:08X}'.format(reversePointers[pointerAddress])
+
+            print('{} {}'.format(addr, compiled))
 
