@@ -1,0 +1,28 @@
+; standardCalls.mmp - Working out what a standard call should look like
+; ===== Entry =====
+
+&Return00       ReturnPoint
+&FunctionB      Step
+@ Return00
+
+&Return01       ReturnPoint
+&FunctionA      Step
+@ Return01
+
+&0              ClockMode
+
+@ ReturnPoint = 0
+
+
+; ===== Function A =====
+
+@ FunctionA
+    &0xAAAAAAAA     DispA
+    ReturnPoint     Step
+
+
+; ===== Function B =====
+
+@ FunctionB
+    &0xBBBBBBBB     DispA
+    ReturnPoint     Step

@@ -1,38 +1,46 @@
 ; test.mmp - Basic functionality test for the MMP-1
+; ===== Entry ====
 
-&TestDisplays Step
+; &TestDisplays   Step
 @ RetTestDisplays
 
-&TestALU Step
+&TestALU        Step
 @ RetTestALU
 
-; 0 ClockMode
-
-&TestDisplays DispA
-
+Const_0         ClockMode
+@ Const_0 = 0
 
 
-; Test 7 seg displays
+
+; ===== Test 7 seg displays =====
 
 @ Const_As = 0xAAAAAAAA
 @ Const_Bs = 0xBBBBBBBB
 
 @ TestDisplays
-    Const_As DispA
-    Const_Bs DispB
+    Const_As    DispA
+    Const_Bs    DispB
 
 &RetTestDisplays Step
 
 
 
-; Test ALU
+; ===== Test ALU =====
 
 @ Const_2 = 2
 @ Const_3 = 3
 
 @ TestALU
-    Const_2 ALU.A
-    Const_3 ALU.B
-    ALU.SUM DispA
+    Const_2     ALU.A
+    Const_3     ALU.B
+    ALU.SUM     DispA
+    ALU.AND     DispA
+    ALU.OR      DispA
+    ALU.XOR     DispA
+    ALU.NOT     DispA
+    ALU.GT      DispA
+    ALU.GTE     DispA
+    ALU.LT      DispA
+    ALU.LTE     DispA
 
-&RetTestALU Step
+&RetTestALU     Step

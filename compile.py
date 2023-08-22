@@ -43,44 +43,36 @@ def isValidTagName(name):
 
 
 def resolveAddr(ident: str):
-    # ident is a tag name
-    if ident in tags:
-        return tags[ident]
-
     # ident is a pointer
-    elif ident[0] == '&':
-        if ident[1:] in tags:
-            pointerTarget = resolveAddr(ident[1:])
-            if pointerTarget is None:
-                return None
-            
-            elif pointerTarget in pointers.keys():
-                return pointers[pointerTarget]
-            
-            else:
-                pointerAddr = len(program) + len(pointers)  # pointers will be embedded directly after the program
-                pointers[pointerTarget] = pointerAddr
-                return pointerAddr
+    if ident[0] == '&':
+        pointerTarget = resolveAddr(ident[1:])
+        if pointerTarget is None:
+            return None
+        
+        elif pointerTarget in pointers.keys():
+            return pointers[pointerTarget]
+        
+        else:
+            pointerAddr = len(program) + len(pointers)  # pointers will be embedded directly after the program
+            pointers[pointerTarget] = pointerAddr
+            return pointerAddr
+
+    # ident is a tag name
+    elif ident in tags:
+        return tags[ident]
 
     # ident is a literal address
     else:
-        try:
-            if ident[0:2] == '0x': addr = int(ident, base=16)
-            elif ident[0:2] == '0b': addr = int(ident, base=2)
-            else: addr = int(ident)
-        except ValueError:
-            return None
-        
-        return addr
+        return resolveValue(ident)
 
-def resolveValue(value):
+def resolveValue(ident):
     try:
-        if value[0:2] == '0x': value = int(value, base=16)
-        elif value[0:2] == '0b': value = int(value, base=2)
-        else: value = int(value)
+        if ident[0:2] == '0x': value = int(ident, base=16)
+        elif ident[0:2] == '0b': value = int(ident, base=2)
+        else: value = int(ident)
+        return value
     except ValueError:
         return None
-    return value
         
 
 deviceLayouts = {
@@ -105,6 +97,7 @@ deviceLayouts = {
             'DispB':            0xF101,
             'Matrix.XIndex':    0xF200,
             'Matrix.CValues':   0xF201,
+            'ClockMode':        0xFFF0,
             'Step':             0xFFFF
         }
     }

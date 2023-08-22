@@ -1,0 +1,26 @@
+; conway.mmp - Conway's Game of Life
+; ===== Entry ====
+
+
+
+; Quick matrix test
+
+Const_1     ALU.B
+
+@ Loop
+    ALU.A               Matrix.XIndex
+    Matrix.XIndex       DispA
+    ALU.A               Matrix.CValues
+    Matrix.CValues      DispB
+    ALU.SUM             ALU.A
+
+    &Loop       Step
+
+
+; Halt the machine
+Const_3     ClockMode
+
+@ Const_1 = 1
+@ Const_3 = 3
+@ Const_55555555 = 0x55555555
+@ Const_AAAAAAAA = 0xAAAAAAAA
