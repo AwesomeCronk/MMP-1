@@ -16,28 +16,70 @@
 
 
 ; ===== Main loop =====
+@ MainLoopEnter
+@ MainLoop
+    ; Perform cell calculations from BottomBuffer to TopBuffer
+    &CalcLoopEnter      Step
+    @ CalcLoopReturn
 
-@ Loop
-    
+
+    ; Render TopBuffer to Matrix
+
 
     ; Swap top/bottom buffers
-    TopBuffer       SwapBuffer
-    BottomBuffer    TopBuffer
-    SwapBuffer      BottomBuffer
+    TopBuffer           SwapBuffer
+    BottomBuffer        TopBuffer
+    SwapBuffer          BottomBuffer
 
-    &Loop       Step
+    &MainLoop           Step
 
 ; Halt
 &1      ClockMode
 
 
 
+; ===== Calculation loop =====
+@ CalcLoopEnter
+    &0          CalcLoopIter
+
+@ CalcLoop
+    ; Count neighbors
+    
+
+    ; Determine cell value
+
+    ; Increment CalcLoopIter
+    CalcLoopIter        ALU.A
+    &1                  ALU.B
+    ALU.SUM             CalcLoopIter
+
+    ; Check CalcLoopIter
+    CalcLoopIter        ALU.A
+    CalcLoopCount       ALU.B
+    ALU.GTE             ALU.A
+
+    &CalcLoopContinue   ALU.B
+    ALU.SUM             Step
+    
+@ CalcLoopContinue
+    &CalcLoop           Step
+@ CalcLoopBreak
+    &CalcLoopReturn     Step
+
+
+
 ; ===== Global tags =====
 
-$ ReturnPoint   0x4000
+& CalcLoopCount   = 1024    ; 32 * 32 = 1024
+& RenderLoopCount = 1024
 
-$ TopBuffer     0x43FD
-$ BottomBuffer  0x43FE
-$ SwapBuffer    0x43FF
-$ BufferA       0x4400
-$ BufferB       0x4800
+$ ReturnPoint       0x4000
+$ CalcLoopIter      0x4001
+$ RenderLoopIter    0x4002
+
+$ TopBuffer         0x4003
+$ BottomBuffer      0x4004
+$ SwapBuffer        0x4005
+
+$ BufferA           0x4400
+$ BufferB           0x4800

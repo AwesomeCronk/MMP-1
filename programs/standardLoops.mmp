@@ -1,0 +1,55 @@
+; loopTest.mmp - Testing means of conditional looping
+; ===== Entry =====
+&LoopEnter      Step
+@ LoopReturn
+
+&0xBADC0FEE     DispB
+&0              ClockMode
+
+
+
+; ===== Loop =====
+@ LoopEnter
+    &0          LoopIter
+@ Loop
+    LoopIter    DispA
+
+    ; Increment LoopIter
+    LoopIter    ALU.A
+    &1          ALU.B
+    ALU.SUM     LoopIter
+
+    ; Check LoopIter
+    LoopIter        ALU.A
+    LoopCount       ALU.B
+    ALU.GTE         ALU.A
+
+    &LoopContinue   ALU.B
+    ALU.SUM         Step
+
+@LoopContinue
+    &Loop           Step
+@ LoopBreak
+    &LoopReturn     Step    
+
+
+
+; ===== Global tags =====
+@ LoopCount = 7
+$ LoopIter  0x4000
+
+; A standard loop has these tags:
+; - LoopEnter
+;   - The address of the loop's entry point. Handles clearing of LoopIter, etc.
+; - Loop
+;   - The address of the loop point. This is jumped to within the loop.
+; - LoopContinue
+;   - The address of the continue option for the conditional jump which breaks the loop.
+; - LoopBreak
+;   - The address of the break option for the conditional jump which breaks the loop.
+; - LoopReturn
+;   - The address which the loop should return to after breaking.
+; - LoopCount
+;   - How many times the loop should loop
+; - LoopIter
+;   - The current loop iteration
