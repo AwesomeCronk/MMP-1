@@ -231,7 +231,7 @@ GT, GTE, LT, LTE
           <rotation rotation="3"/>
         </entry>
       </elementAttributes>
-      <pos x="820" y="1620"/>
+      <pos x="820" y="1640"/>
     </visualElement>
     <visualElement>
       <elementName>Tunnel</elementName>
@@ -881,7 +881,7 @@ GT, GTE, LT, LTE
           <string>Res</string>
         </entry>
       </elementAttributes>
-      <pos x="180" y="420"/>
+      <pos x="160" y="420"/>
     </visualElement>
     <visualElement>
       <elementName>Tunnel</elementName>
@@ -900,7 +900,7 @@ GT, GTE, LT, LTE
     <visualElement>
       <elementName>RS_FF_AS</elementName>
       <elementAttributes/>
-      <pos x="220" y="420"/>
+      <pos x="200" y="420"/>
     </visualElement>
     <visualElement>
       <elementName>Counter</elementName>
@@ -927,16 +927,6 @@ GT, GTE, LT, LTE
       <pos x="360" y="440"/>
     </visualElement>
     <visualElement>
-      <elementName>Const</elementName>
-      <elementAttributes>
-        <entry>
-          <string>Value</string>
-          <long>0</long>
-        </entry>
-      </elementAttributes>
-      <pos x="360" y="460"/>
-    </visualElement>
-    <visualElement>
       <elementName>Tunnel</elementName>
       <elementAttributes>
         <entry>
@@ -954,7 +944,7 @@ GT, GTE, LT, LTE
           <string>~Rst</string>
         </entry>
       </elementAttributes>
-      <pos x="320" y="500"/>
+      <pos x="300" y="500"/>
     </visualElement>
     <visualElement>
       <elementName>Tunnel</elementName>
@@ -2378,7 +2368,7 @@ Data changes on +Clk</string>
         </entry>
         <entry>
           <string>Frequency</string>
-          <int>2</int>
+          <int>8</int>
         </entry>
       </elementAttributes>
       <pos x="1000" y="1140"/>
@@ -2521,6 +2511,21 @@ Data changes on +Clk</string>
         </entry>
       </elementAttributes>
       <pos x="1040" y="980"/>
+    </visualElement>
+    <visualElement>
+      <elementName>And</elementName>
+      <elementAttributes/>
+      <pos x="1060" y="1640"/>
+    </visualElement>
+    <visualElement>
+      <elementName>LED</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>ErrROMWrite</string>
+        </entry>
+      </elementAttributes>
+      <pos x="1200" y="1660"/>
     </visualElement>
   </visualElements>
   <wires>
@@ -2669,7 +2674,7 @@ Data changes on +Clk</string>
       <p2 x="320" y="1160"/>
     </wire>
     <wire>
-      <p1 x="200" y="520"/>
+      <p1 x="180" y="520"/>
       <p2 x="460" y="520"/>
     </wire>
     <wire>
@@ -2833,6 +2838,10 @@ Data changes on +Clk</string>
       <p2 x="700" y="1680"/>
     </wire>
     <wire>
+      <p1 x="1020" y="1680"/>
+      <p2 x="1060" y="1680"/>
+    </wire>
+    <wire>
       <p1 x="160" y="660"/>
       <p2 x="180" y="660"/>
     </wire>
@@ -2878,11 +2887,15 @@ Data changes on +Clk</string>
     </wire>
     <wire>
       <p1 x="760" y="1560"/>
-      <p2 x="1060" y="1560"/>
+      <p2 x="1040" y="1560"/>
     </wire>
     <wire>
       <p1 x="1360" y="1560"/>
       <p2 x="1380" y="1560"/>
+    </wire>
+    <wire>
+      <p1 x="1040" y="1560"/>
+      <p2 x="1060" y="1560"/>
     </wire>
     <wire>
       <p1 x="2160" y="1180"/>
@@ -2977,12 +2990,16 @@ Data changes on +Clk</string>
       <p2 x="2380" y="420"/>
     </wire>
     <wire>
-      <p1 x="180" y="420"/>
-      <p2 x="220" y="420"/>
+      <p1 x="160" y="420"/>
+      <p2 x="200" y="420"/>
     </wire>
     <wire>
-      <p1 x="280" y="420"/>
+      <p1 x="260" y="420"/>
       <p2 x="340" y="420"/>
+    </wire>
+    <wire>
+      <p1 x="440" y="420"/>
+      <p2 x="460" y="420"/>
     </wire>
     <wire>
       <p1 x="1820" y="420"/>
@@ -3189,8 +3206,8 @@ Data changes on +Clk</string>
       <p2 x="2180" y="1720"/>
     </wire>
     <wire>
-      <p1 x="200" y="440"/>
-      <p2 x="220" y="440"/>
+      <p1 x="180" y="440"/>
+      <p2 x="200" y="440"/>
     </wire>
     <wire>
       <p1 x="360" y="440"/>
@@ -3201,11 +3218,15 @@ Data changes on +Clk</string>
       <p2 x="460" y="440"/>
     </wire>
     <wire>
-      <p1 x="280" y="440"/>
-      <p2 x="300" y="440"/>
+      <p1 x="260" y="440"/>
+      <p2 x="280" y="440"/>
     </wire>
     <wire>
       <p1 x="1820" y="440"/>
+      <p2 x="2200" y="440"/>
+    </wire>
+    <wire>
+      <p1 x="2200" y="440"/>
       <p2 x="2260" y="440"/>
     </wire>
     <wire>
@@ -3377,7 +3398,7 @@ Data changes on +Clk</string>
       <p2 x="2380" y="460"/>
     </wire>
     <wire>
-      <p1 x="360" y="460"/>
+      <p1 x="280" y="460"/>
       <p2 x="380" y="460"/>
     </wire>
     <wire>
@@ -3467,6 +3488,10 @@ Data changes on +Clk</string>
     <wire>
       <p1 x="1740" y="1620"/>
       <p2 x="1780" y="1620"/>
+    </wire>
+    <wire>
+      <p1 x="520" y="1620"/>
+      <p2 x="1020" y="1620"/>
     </wire>
     <wire>
       <p1 x="520" y="1240"/>
@@ -3697,6 +3722,10 @@ Data changes on +Clk</string>
       <p2 x="2500" y="1640"/>
     </wire>
     <wire>
+      <p1 x="1040" y="1640"/>
+      <p2 x="1060" y="1640"/>
+    </wire>
+    <wire>
       <p1 x="1760" y="360"/>
       <p2 x="1800" y="360"/>
     </wire>
@@ -3801,8 +3830,8 @@ Data changes on +Clk</string>
       <p2 x="2380" y="500"/>
     </wire>
     <wire>
-      <p1 x="300" y="500"/>
-      <p2 x="320" y="500"/>
+      <p1 x="280" y="500"/>
+      <p2 x="300" y="500"/>
     </wire>
     <wire>
       <p1 x="1580" y="760"/>
@@ -3825,6 +3854,18 @@ Data changes on +Clk</string>
       <p2 x="2180" y="1400"/>
     </wire>
     <wire>
+      <p1 x="1120" y="1660"/>
+      <p2 x="1200" y="1660"/>
+    </wire>
+    <wire>
+      <p1 x="1740" y="1660"/>
+      <p2 x="1780" y="1660"/>
+    </wire>
+    <wire>
+      <p1 x="2160" y="1660"/>
+      <p2 x="2180" y="1660"/>
+    </wire>
+    <wire>
       <p1 x="1300" y="1020"/>
       <p2 x="1360" y="1020"/>
     </wire>
@@ -3843,14 +3884,6 @@ Data changes on +Clk</string>
     <wire>
       <p1 x="160" y="1020"/>
       <p2 x="180" y="1020"/>
-    </wire>
-    <wire>
-      <p1 x="1740" y="1660"/>
-      <p2 x="1780" y="1660"/>
-    </wire>
-    <wire>
-      <p1 x="2160" y="1660"/>
-      <p2 x="2180" y="1660"/>
     </wire>
     <wire>
       <p1 x="340" y="380"/>
@@ -3925,12 +3958,16 @@ Data changes on +Clk</string>
       <p2 x="520" y="1240"/>
     </wire>
     <wire>
+      <p1 x="520" y="1620"/>
+      <p2 x="520" y="1760"/>
+    </wire>
+    <wire>
       <p1 x="520" y="1760"/>
       <p2 x="520" y="1960"/>
     </wire>
     <wire>
       <p1 x="520" y="1240"/>
-      <p2 x="520" y="1760"/>
+      <p2 x="520" y="1620"/>
     </wire>
     <wire>
       <p1 x="3080" y="460"/>
@@ -3950,7 +3987,7 @@ Data changes on +Clk</string>
     </wire>
     <wire>
       <p1 x="780" y="1540"/>
-      <p2 x="780" y="1620"/>
+      <p2 x="780" y="1640"/>
     </wire>
     <wire>
       <p1 x="780" y="1720"/>
@@ -4001,6 +4038,10 @@ Data changes on +Clk</string>
       <p2 x="1040" y="1860"/>
     </wire>
     <wire>
+      <p1 x="1040" y="1560"/>
+      <p2 x="1040" y="1640"/>
+    </wire>
+    <wire>
       <p1 x="1040" y="1800"/>
       <p2 x="1040" y="1820"/>
     </wire>
@@ -4034,10 +4075,6 @@ Data changes on +Clk</string>
     </wire>
     <wire>
       <p1 x="2200" y="420"/>
-      <p2 x="2200" y="440"/>
-    </wire>
-    <wire>
-      <p1 x="2200" y="440"/>
       <p2 x="2200" y="480"/>
     </wire>
     <wire>
@@ -4051,6 +4088,14 @@ Data changes on +Clk</string>
     <wire>
       <p1 x="280" y="780"/>
       <p2 x="280" y="940"/>
+    </wire>
+    <wire>
+      <p1 x="280" y="440"/>
+      <p2 x="280" y="460"/>
+    </wire>
+    <wire>
+      <p1 x="280" y="460"/>
+      <p2 x="280" y="500"/>
     </wire>
     <wire>
       <p1 x="920" y="980"/>
@@ -4101,7 +4146,7 @@ Data changes on +Clk</string>
       <p2 x="800" y="1040"/>
     </wire>
     <wire>
-      <p1 x="800" y="1680"/>
+      <p1 x="800" y="1700"/>
       <p2 x="800" y="1780"/>
     </wire>
     <wire>
@@ -4193,10 +4238,6 @@ Data changes on +Clk</string>
       <p2 x="940" y="1140"/>
     </wire>
     <wire>
-      <p1 x="300" y="440"/>
-      <p2 x="300" y="500"/>
-    </wire>
-    <wire>
       <p1 x="300" y="820"/>
       <p2 x="300" y="840"/>
     </wire>
@@ -4262,7 +4303,7 @@ Data changes on +Clk</string>
     </wire>
     <wire>
       <p1 x="820" y="1520"/>
-      <p2 x="820" y="1620"/>
+      <p2 x="820" y="1640"/>
     </wire>
     <wire>
       <p1 x="2740" y="460"/>
@@ -4275,6 +4316,10 @@ Data changes on +Clk</string>
     <wire>
       <p1 x="1460" y="620"/>
       <p2 x="1460" y="1960"/>
+    </wire>
+    <wire>
+      <p1 x="180" y="440"/>
+      <p2 x="180" y="520"/>
     </wire>
     <wire>
       <p1 x="1080" y="940"/>
@@ -4439,10 +4484,6 @@ Data changes on +Clk</string>
     <wire>
       <p1 x="2760" y="760"/>
       <p2 x="2760" y="780"/>
-    </wire>
-    <wire>
-      <p1 x="200" y="440"/>
-      <p2 x="200" y="520"/>
     </wire>
     <wire>
       <p1 x="1100" y="1080"/>
@@ -4763,6 +4804,10 @@ Data changes on +Clk</string>
     <wire>
       <p1 x="380" y="820"/>
       <p2 x="380" y="840"/>
+    </wire>
+    <wire>
+      <p1 x="1020" y="1620"/>
+      <p2 x="1020" y="1680"/>
     </wire>
   </wires>
   <measurementOrdering/>

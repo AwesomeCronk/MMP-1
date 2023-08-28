@@ -1,46 +1,61 @@
-; test.mmp - Basic functionality test for the MMP-1
-; ===== Entry ====
+; Test.mmp - Jump test
+; ===== Entry =====
 
-; &TestDisplays   Step
-@ RetTestDisplays
+; If this instruction is commented out, DispA should
+; show 2, then 3. Otherwise, DispA should just show 3.
+&Display3 Step
 
-&TestALU        Step
-@ RetTestALU
-
-Const_0         ClockMode
-@ Const_0 = 0
-
-
-
-; ===== Test 7 seg displays =====
-
-@ Const_As = 0xAAAAAAAA
-@ Const_Bs = 0xBBBBBBBB
-
-@ TestDisplays
-    Const_As    DispA
-    Const_Bs    DispB
-
-&RetTestDisplays Step
+@ Display2
+    &2 DispA
+    
+@ Display3
+    &3 DispA
 
 
-
-; ===== Test ALU =====
-
-@ Const_2 = 2
-@ Const_3 = 3
-
-@ TestALU
-    Const_2     ALU.A
-    Const_3     ALU.B
-    ALU.SUM     DispA
-    ALU.AND     DispA
-    ALU.OR      DispA
-    ALU.XOR     DispA
-    ALU.NOT     DispA
-    ALU.GT      DispA
-    ALU.GTE     DispA
-    ALU.LT      DispA
-    ALU.LTE     DispA
-
-&RetTestALU     Step
+; ; test.mmp - Basic functionality test for the MMP-1
+; ; ===== Entry ====
+; 
+; ; &TestDisplays   Step
+; @ RetTestDisplays
+; 
+; &TestALU        Step
+; @ RetTestALU
+; 
+; Const_0         ClockMode
+; @ Const_0 = 0
+; 
+; 
+; 
+; ; ===== Test 7 seg displays =====
+; 
+; @ Const_As = 0xAAAAAAAA
+; @ Const_Bs = 0xBBBBBBBB
+; 
+; @ TestDisplays
+;     Const_As    DispA
+;     Const_Bs    DispB
+; 
+; &RetTestDisplays Step
+; 
+; 
+; 
+; ; ===== Test ALU =====
+; 
+; @ Const_2 = 2
+; @ Const_3 = 3
+; 
+; @ TestALU
+;     Const_2     ALU.A
+;     Const_3     ALU.B
+;     ALU.SUM     DispA
+;     ALU.AND     DispA
+;     ALU.OR      DispA
+;     ALU.XOR     DispA
+;     ALU.NOT     DispA
+;     ALU.GT      DispA
+;     ALU.GTE     DispA
+;     ALU.LT      DispA
+;     ALU.LTE     DispA
+; 
+; &RetTestALU     Step
+; 

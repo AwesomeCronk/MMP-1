@@ -49,27 +49,26 @@ $ tags may point to an instruction in the program. If such tags are assigned a v
 Prefixing a tag or literal in an instruction with an ampersand (&) causes the address of tag or literal to be copied instead of the data *at* the address. The compiler achieves this by appending a bank of pointer data at the end of the program and inserting the address of the related pointer entry into the instruction. For example, here is the listing of a basic test program demonstrating this:
 
 ```
-Read programs/test.mmp (15 lines)
-Wrote program.bin (24B)
+Read programs/test.mmp (61 lines)
+Wrote output.bin (20B)
  Addr  :     Compiled     | Line : Source
 ====== : ================ | ==== : ==================================================================================
-                          |    1 : ; Test jump
-                          |    2 : 
-                          |    3 : ; If this instruction is commented out, DispA should
-                          |    4 : ; show 2, then 3. Otherwise, DispA should just show 3.
-0x0000 : 0x0005 -> 0xFFFF |    5 : &Display3 Step
-                          |    6 : 
-                          |    7 : @ Display2
-0x0001 : 0x0003 -> 0xF100 |    8 : Const_2 DispA
-                          |    9 : 
-                          |   10 : @ Display3
-0x0002 : 0x0004 -> 0xF100 |   11 : Const_3 DispA
-                          |   12 : 
-0x0003 : 0x00000002       |   13 : @ Const_2 = 2
-0x0004 : 0x00000003       |   14 : @ Const_3 = 3
-                          |   15 : 
-0x0005 : &0x00000002      |
-
+                          |    1 : ; Test.mmp - Jump test
+                          |    2 : ; ===== Entry =====
+                          |    3 : 
+                          |    4 : ; If this instruction is commented out, DispA should
+                          |    5 : ; show 2, then 3. Otherwise, DispA should just show 3.
+0x0000 : 0x0003 -> 0xFFFF |    6 : &Display3 Step
+                          |    7 : 
+                          |    8 : @ Display2
+0x0001 : 0x0003 -> 0xF100 |    9 :     &2 DispA
+                          |   10 :     
+                          |   11 : @ Display3
+0x0002 : 0x0004 -> 0xF100 |   12 :     &3 DispA
+                          |   13 : 
+ Addr  :   Pointer  
+0x0003 : &0x00000002
+0x0004 : &0x00000003
 ```
 
 ## Addresses

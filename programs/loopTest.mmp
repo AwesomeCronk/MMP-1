@@ -1,0 +1,31 @@
+; loopTest.mmp - Testing means of conditional looping
+; ===== Entry =====
+
+&0      LoopIter
+
+@ Loop
+    LoopIter    DispA
+
+    ; Increment LoopIter
+    LoopIter    ALU.A
+    &1          ALU.B
+    ALU.SUM     LoopIter
+
+    ; Compare LoopIter to LoopCount and conditionally jump
+    LoopIter        ALU.A
+    LoopCount       ALU.B
+    ALU.GTE         ALU.A
+    &LoopContinue   ALU.B
+    ALU.SUM         Step
+
+    @LoopContinue
+    &Loop       Step
+    @ LoopBreak
+    ; If desired, this line would be a return to whatever started the loop
+
+&0xBADC0FEE     DispB
+&0              ClockMode
+
+@ LoopCount = 7
+$ LoopIter  0x4000
+

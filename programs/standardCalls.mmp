@@ -11,7 +11,7 @@
 
 &0              ClockMode
 
-@ ReturnPoint = 0
+$ ReturnPoint 0x4000
 
 
 ; ===== Function A =====
