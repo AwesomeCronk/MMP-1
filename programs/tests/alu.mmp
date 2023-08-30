@@ -1,0 +1,20 @@
+; ===== Test ALU =====
+
+@ TestALU
+    &2          ALU.A
+    &3          ALU.B
+    ALU.SUM     DispA
+    ALU.DIF     DispA
+    ALU.LSH     DispA
+    ALU.RSH     DispA
+    ALU.AND     DispA
+    ALU.OR      DispA
+    ALU.XOR     DispA
+    ALU.NOT     DispA
+    ALU.GT      DispA
+    ALU.GTE     DispA
+    ALU.LT      DispA
+    ALU.LTE     DispA
+
+&0      ClockMode
+

@@ -1,0 +1,7 @@
+; ===== Test 7 seg displays =====
+
+@ TestDisplays
+    &0xAAAAAAAA     DispA
+    &0xBBBBBBBB     DispB
+
+&0      ClockMode

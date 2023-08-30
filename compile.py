@@ -98,8 +98,8 @@ deviceLayouts = {
             'ALU.LTE':          0xF00D,
             'DispA':            0xF100,
             'DispB':            0xF101,
-            'Matrix.XIndex':    0xF200,
-            'Matrix.CValues':   0xF201,
+            'Matrix.Index':     0xF200,
+            'Matrix.Row':       0xF201,
             'ClockMode':        0xFFF0,
             'Step':             0xFFFF
         }
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
             if not rawValue is None:
                 value = resolveValue(rawValue)
-                if value is None: print('ERROR Line {}: Invalid value {}'.format(l + 1, rawValue))
+                if value is None: print('ERROR Line {}: Invalid value {}'.format(l + 1, rawValue)); sys.exit(1)
                 program[l] = value
 
             tags[name] = addr
@@ -164,7 +164,10 @@ if __name__ == '__main__':
 
         # Copy
         else:
-            src, dest = [part.strip() for part in instr.split()]
+            try:
+                src, dest = [part.strip() for part in instr.split()]
+            except ValueError:
+                print('ERROR Line {}: Instruction invalid'.format(l + 1)); sys.exit(1)
 
             program[l] = (src, dest)
 

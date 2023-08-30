@@ -1,0 +1,10 @@
+; ===== Test matrix =====
+
+&0              ALU.A
+&1              ALU.B
+
+@ TestMatrix
+    ALU.A           Matrix.Index
+    ALU.A           Matrix.Row
+    ALU.SUM         ALU.A
+    &TestMatrix     Step
