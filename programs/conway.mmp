@@ -43,8 +43,17 @@
     &0          CalcLoopIter
 
 @ CalcLoop
-    ; Count neighbors
-    
+    &1          ClockMode   ; Switch to instuction step mode
+    CalcLoopIter    DispA
+    ; Get (X, Y) coordinates from CalcLoopIter
+    CalcLoopIter    ALU.A
+    &3              ALU.B
+    ALU.LSH         X
+    &0b111        ALU.B
+    ALU.AND         Y
+    X   DispA
+    Y   DispB
+
 
     ; Determine cell value
 
@@ -70,8 +79,8 @@
 
 ; ===== Global tags =====
 
-& CalcLoopCount   = 1024    ; 32 * 32 = 1024
-& RenderLoopCount = 1024
+@ CalcLoopCount   = 256     ; 8 * 8 = 256
+@ RenderLoopCount = 256
 
 $ ReturnPoint       0x4000
 $ CalcLoopIter      0x4001
@@ -80,6 +89,9 @@ $ RenderLoopIter    0x4002
 $ TopBuffer         0x4003
 $ BottomBuffer      0x4004
 $ SwapBuffer        0x4005
+
+$ X                 0x4006
+$ Y                 0x4007
 
 $ BufferA           0x4400
 $ BufferB           0x4800
