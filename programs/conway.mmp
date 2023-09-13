@@ -2,11 +2,11 @@
 ; ===== Entry ====
 
 ; Draw a glider
-&1      0x4881
-&1      0x48A2
-&1      0x48C0
-&1      0x48C1
-&1      0x48C2
+&1      0x4802
+&1      0x480A
+&1      0x480C
+&1      0x4811
+&1      0x4812
 
 ; BufferA and BufferB are the actual buffers, while TopBuffer and BottomBuffer are pointers
 ; Previous cells are read from BottomBuffer and new cells are written to TopBuffer
@@ -26,15 +26,13 @@
     ; Render TopBuffer to Matrix
 
 
+
     ; Swap top/bottom buffers
     TopBuffer           SwapBuffer
     BottomBuffer        TopBuffer
     SwapBuffer          BottomBuffer
 
     &MainLoop           Step
-
-; Halt
-&1      ClockMode
 
 
 
@@ -74,6 +72,16 @@
     &CalcLoop           Step
 @ CalcLoopBreak
     &CalcLoopReturn     Step
+
+
+
+; ===== Render loop =====
+@ RenderLoopEnter
+@ RenderLoop
+    
+
+@ RenderLoopContinue
+@ RenderLoopBreak
 
 
 

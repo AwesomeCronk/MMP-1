@@ -1,21 +1,13 @@
 ; Computes the fibonacci sequence
 
-Start Step
 
-@ Const_0 = 0
-@ Const_1 = 1
-
-$ Intermediate 0x4000   ; Put it in RAM
-
-@ Start
-    Const_0     ALU.A
-    Const_1     ALU.B
+&0      ALU.A
+&1      ALU.B
     
     
 @ Loop
-    ; At this point in the loop, ALU.SUM has the next number
-    ; Would copy to output but it's not built yet
-    ALU.SUM         Intermediate
+    
+    ALU.SUM         DispA
     ALU.B           ALU.A
-    Intermediate    ALU.B
-    Loop            Step
+    DispA           ALU.B
+    &Loop           Step

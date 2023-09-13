@@ -812,6 +812,10 @@
           <string>Bits</string>
           <int>32</int>
         </entry>
+        <entry>
+          <string>barrelShifterMode</string>
+          <barrelShifterMode>rotate</barrelShifterMode>
+        </entry>
       </elementAttributes>
       <pos x="900" y="60"/>
     </visualElement>
@@ -821,6 +825,10 @@
         <entry>
           <string>Bits</string>
           <int>32</int>
+        </entry>
+        <entry>
+          <string>barrelShifterMode</string>
+          <barrelShifterMode>rotate</barrelShifterMode>
         </entry>
       </elementAttributes>
       <pos x="900" y="180"/>
