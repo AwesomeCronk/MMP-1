@@ -42,24 +42,24 @@ def isValidTagName(name):
     return True
 
 
-def resolveAddr(ident: str):
+def resolveAddr(ident, program):
     # ident is a pointer
     if ident[0] == '&':
-        pointerTarget = resolveAddr(ident[1:])
+        pointerTarget = resolveAddr(ident[1:], program)
         if pointerTarget is None:
             return None
         
-        elif pointerTarget in pointers.keys():
+        elif pointerTarget in program.pointers.keys():
             return pointers[pointerTarget]
         
         else:
-            pointerAddr = len(program) + len(pointers)  # pointers will be embedded directly after the program
-            pointers[pointerTarget] = pointerAddr
+            pointerAddr = len(program.entries) + len(program.pointers)  # pointers will be embedded directly after the program
+            program.pointers[pointerTarget] = pointerAddr
             return pointerAddr
 
     # ident is a tag name
-    elif ident in tags:
-        return tags[ident]
+    elif ident in program.tags:
+        return program.tags[ident]
 
     # ident is a literal address
     else:
@@ -105,25 +105,33 @@ deviceLayouts = {
         }
     }
 }
+deviceLayout = None
 
-
-if __name__ == '__main__':
-    args = getArgs()
-    try: tags = deviceLayouts[args.device]['tags']
+def getDeviceLayout(deviceName):
+    global deviceLayout
+    try: deviceLayout = deviceLayouts[deviceName]
     except IndexError: print('Device {} not recognized'); sys.exit(1)
-    pointers = {}
-    binary = b''
-    program = {}
 
 
-    # Load code
-    with open(args.infile, 'r') as infile:
-        code = infile.read().split('\n')
-    print('Read {} ({} lines)'.format(args.infile, len(code)))
+class _program:
+    def __init__(self):
+        self.source = []
+        self.entries = {}
+        self.tags = {}
+        self.pointers = {}
 
 
-    # First pass: Generate program object
-    for l, line in enumerate(code):
+# First pass: Generate program object
+def parseFile(path):
+    program = _program()
+    program.tags = deviceLayout['tags']
+
+    # Load source
+    with open(path, 'r') as infile:
+        program.source = infile.read().split('\n')
+    print('Read {} ({} lines)'.format(args.infile, len(program.source)))
+
+    for l, line in enumerate(program.source):
         instr = line.split(';')[0].strip()  # Remove comments and clean up whitespace
         if instr == '': continue
 
@@ -131,11 +139,11 @@ if __name__ == '__main__':
         # Absolute tag
         elif instr[0] == '$':
             name, rawAddr = instr[1:].strip().split()
-            if name in tags.keys(): print('ERROR Line {}: Tag {} declared multiple times'.format(l + 1, name)); sys.exit(1)
+            if name in program.tags.keys(): print('ERROR Line {}: Tag {} declared multiple times'.format(l + 1, name)); sys.exit(1)
 
-            addr = resolveAddr(rawAddr)
+            addr = resolveAddr(rawAddr, program)
             if addr is None: print('ERROR Line {}: Cannot resolve address {}'.format(l + 1, rawAddr))
-            tags[name] = addr
+            program.tags[name] = addr
 
             # print('Line {}: Declare absolute tag {} at 0x{:04X}'.format(l + 1, name, addr) + ('' if value is None else ' with value {}'.format(value)))
 
@@ -147,17 +155,17 @@ if __name__ == '__main__':
             else:
                 name = instr[1:].strip(); rawValue = None
 
-            if name in tags.keys():
+            if name in program.tags.keys():
                 print('ERROR Line {}: Tag {} declared multiple times'.format(l + 1, name)); sys.exit(1)
 
-            addr = len(program)
+            addr = len(program.entries)
 
             if not rawValue is None:
                 value = resolveValue(rawValue)
                 if value is None: print('ERROR Line {}: Invalid value {}'.format(l + 1, rawValue)); sys.exit(1)
-                program[l] = value
+                program.entries[l] = value
 
-            tags[name] = addr
+            program.tags[name] = addr
 
             # print('Line {}: Declare relative tag {} at 0x{:04X}'.format(l + 1, name, addr) + ('' if value is None else ' with value {}'.format(value)))
 
@@ -169,96 +177,109 @@ if __name__ == '__main__':
             except ValueError:
                 print('ERROR Line {}: Instruction invalid'.format(l + 1)); sys.exit(1)
 
-            program[l] = (src, dest)
+            program.entries[l] = (src, dest)
 
             # print('Line {}: Copy {} to {}'.format(l + 1, src, dest))
 
+    return program
 
-    # Second pass: Replace tag names with their resolutions
-    for l in program.keys():
-        instr = program[l]
+# Second pass: Replace tag names with their resolutions
+def resolveTags(program):
+    for l in program.entries.keys():
+        instr = program.entries[l]
         if isinstance(instr, tuple):
-            src, dest = [resolveAddr(part) for part in instr]
+            src, dest = [resolveAddr(part, program) for part in instr]
             
             if src is None: print('ERROR Line {}: Unable to resolve address for {}'.format(l + 1, instr[0])); sys.exit(1)
             if dest is None: print('ERROR Line {}: Unable to resolve address for {}'.format(l + 1, instr[1])); sys.exit(1)
 
-            program[l] = (src, dest)
+            program.entries[l] = (src, dest)
 
-    # Third pass: Generate binary
+# Third pass: Generate binary
+def generateBinary(program):
     binary = b''
-    for instr in program.values():
+    for instr in program.entries.values():
         if isinstance(instr, tuple):
             binary = binary + int.to_bytes(instr[0], 2, 'big') + int.to_bytes(instr[1], 2, 'big')
         elif isinstance(instr, int):
             binary = binary + int.to_bytes(instr, 4, 'big')
 
-    for pointerTarget in pointers.keys():
+    for pointerTarget in program.pointers.keys():
         binary = binary + int.to_bytes(pointerTarget, 4, 'big')
 
+    return binary
+
+
+def listProgram(program):
+    terminalWidth = os.get_terminal_size()[0]
+    compiledWidth = 16
+    pointerWidth = 11
+    lineNumSize = len(str(len(program.source)))   # Max number of digits in line numbers
+    print(' Addr  : {} | Line : Source'.format('Compiled'.center(compiledWidth)))
+    print('====== : {} | ==== : {}'.format('=' * compiledWidth, '=' * (terminalWidth - compiledWidth - 19)))
+    for l, line in enumerate(program.source):
+        if l in program.entries.keys():
+            addr = tuple(program.entries.keys()).index(l)
+
+            compiled = program.entries[l]
+            if isinstance(compiled, tuple):
+                src, dest = compiled
+                if isinstance(src, int): src = '0x{:04X}'.format(src)
+                if isinstance(dest, int): dest = '0x{:04X}'.format(dest)
+                compiled = '{} -> {}'.format(str(src).rjust((compiledWidth - 4) // 2), str(dest).ljust((compiledWidth - 4) // 2))
+            
+            elif isinstance(compiled, int):
+                compiled = '0x{:08X}'.format(compiled).ljust(compiledWidth)
+
+            # Should never get here if passes 1 and 2 worked, but hey it never hurts to add an else
+            else:
+                compiled = repr(compiled).ljust(compiledWidth)
+
+        else:
+            compiled = ' ' * compiledWidth
+            addr = None
+
+        if addr is None: addr = ' ' * 8
+        else: addr = '0x{:04X} :'.format(addr)
+
+        print('{} {} | {} : {}'.format(addr, compiled, str(l + 1).rjust(max(lineNumSize, 4)), line))
+
+    print(' Addr  : {}'.format('Pointer'.center(pointerWidth)))
+
+    
+    reversePointers = {}
+    pointerTargets = tuple(program.pointers.keys())
+
+    for p, pointerAddress in enumerate(program.pointers.values()):
+        reversePointers[pointerAddress] = pointerTargets[p]
+
+    for pointerAddress in reversePointers.keys():
+        addr = '0x{:04X} :'.format(pointerAddress)
+        compiled = '&0x{:08X}'.format(reversePointers[pointerAddress])
+
+        print('{} {}'.format(addr, compiled))
+
+
+if __name__ == '__main__':
+    args = getArgs()
+
+    getDeviceLayout(args.device)
+    program = parseFile(args.infile)
+    resolveTags(program)
+    binary = generateBinary(program)
 
     # Write binary
     with open(args.outfile, 'wb') as outfile:
         outfile.write(binary)
     
     binarySize = len(binary)
-    prefixes = ['B', 'kB', 'MB', 'GB', 'TB', 'PB']
+    suffixes = ['B', 'kB', 'MB', 'GB', 'TB', 'PB']
 
-    for prefix in prefixes:
+    for suffix in suffixes:
         if binarySize < 1024:
-            print('Wrote {} ({}{})'.format(args.outfile, binarySize, prefix))
+            print('Wrote {} ({}{})'.format(args.outfile, binarySize, suffix))
             break
         else:
             binarySize //= 1024
 
-
-    # Generate program listing
-    if args.list:
-        terminalWidth = os.get_terminal_size()[0]
-        compiledWidth = 16
-        pointerWidth = 11
-        lineNumSize = len(str(len(code)))   # Max number of digits in line numbers
-        print(' Addr  : {} | Line : Source'.format('Compiled'.center(compiledWidth)))
-        print('====== : {} | ==== : {}'.format('=' * compiledWidth, '=' * (terminalWidth - compiledWidth - 19)))
-        for l, line in enumerate(code):
-            if l in program.keys():
-                addr = tuple(program.keys()).index(l)
-
-                compiled = program[l]
-                if isinstance(compiled, tuple):
-                    src, dest = compiled
-                    if isinstance(src, int): src = '0x{:04X}'.format(src)
-                    if isinstance(dest, int): dest = '0x{:04X}'.format(dest)
-                    compiled = '{} -> {}'.format(str(src).rjust((compiledWidth - 4) // 2), str(dest).ljust((compiledWidth - 4) // 2))
-                
-                elif isinstance(compiled, int):
-                    compiled = '0x{:08X}'.format(compiled).ljust(compiledWidth)
-
-                # Should never get here if passes 1 and 2 worked, but hey it never hurts to add an else
-                else:
-                    compiled = repr(compiled).ljust(compiledWidth)
-
-            else:
-                compiled = ' ' * compiledWidth
-                addr = None
-
-            if addr is None: addr = ' ' * 8
-            else: addr = '0x{:04X} :'.format(addr)
-
-            print('{} {} | {} : {}'.format(addr, compiled, str(l + 1).rjust(max(lineNumSize, 4)), line))
-
-        print(' Addr  : {}'.format('Pointer'.center(pointerWidth)))
-
-        
-        reversePointers = {}
-        pointerTargets = tuple(pointers.keys())
-
-        for p, pointerAddress in enumerate(pointers.values()):
-            reversePointers[pointerAddress] = pointerTargets[p]
-
-        for pointerAddress in reversePointers.keys():
-            addr = '0x{:04X} :'.format(pointerAddress)
-            compiled = '&0x{:08X}'.format(reversePointers[pointerAddress])
-
-            print('{} {}'.format(addr, compiled))
-
+    if args.list: listProgram(program)
